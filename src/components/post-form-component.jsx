@@ -2,6 +2,11 @@ import { postsStoreActions } from "../stores/posts-store";
 import { authStore } from "../stores/auth-store";
 import { renderChild } from "../utils/element";
 
+const ID = {
+  POST_CONTENT: "post-content",
+  POST_FORM: "post-form",
+};
+
 class PostFormComponent extends HTMLElement {
   constructor() {
     super();
@@ -12,8 +17,8 @@ class PostFormComponent extends HTMLElement {
     this.addEvent();
   }
 
-  handleAddForm() {
-    const postContent = this.querySelector("#post-content");
+  handleAddPost() {
+    const postContent = this.querySelector(`#${ID.POST_CONTENT}`);
     const { user, isLogin } = authStore.getState();
 
     if (!isLogin) {
@@ -30,9 +35,9 @@ class PostFormComponent extends HTMLElement {
 
   handleSubmit(event) {
     event.preventDefault();
-    const postForm = this.querySelector("#post-form");
+    const postForm = this.querySelector(`#${ID.POST_FORM}`);
     if (event.target === postForm) {
-      this.handleAddForm();
+      this.handleAddPost();
     }
   }
 
@@ -42,9 +47,9 @@ class PostFormComponent extends HTMLElement {
 
   get element() {
     return (
-      <form id="post-form" class="mb-4 bg-white rounded-lg shadow p-4">
+      <form id={ID.POST_FORM} class="mb-4 bg-white rounded-lg shadow p-4">
         <textarea
-          id="post-content"
+          id={ID.POST_CONTENT}
           class="w-full p-2 border rounded"
           placeholder="무슨 생각을 하고 계신가요?"
         ></textarea>

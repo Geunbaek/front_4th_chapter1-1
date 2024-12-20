@@ -1,6 +1,7 @@
 import { getItem, removeItem, setItem } from "@/utils/storage";
 import { createStore } from "@/utils/store";
 import { navigateTo } from "../utils/router";
+import { ROUTE } from "../constant";
 
 const USER_STORE_KEY = "user";
 
@@ -32,7 +33,7 @@ const authGuardMiddleware = () => {
   const { isLogin } = authStore.getState();
 
   if (!isLogin) {
-    navigateTo("/login", { hash: window.isHash });
+    navigateTo(ROUTE.LOGIN, { hash: window.isHash });
     return false;
   }
 
@@ -43,7 +44,7 @@ const guestGuardMiddleware = () => {
   const { isLogin } = authStore.getState();
 
   if (isLogin) {
-    navigateTo("/", { hash: window.isHash });
+    navigateTo(ROUTE.HOME, { hash: window.isHash });
     return false;
   }
 

@@ -1,17 +1,25 @@
 import { authStore, authStoreActions } from "@/stores/auth-store";
 import { navigateTo } from "@/utils/router";
 import { renderChild } from "../utils/element";
+import { HASH_ROUTE, ROUTE } from "../constant";
+
+const ID = {
+  HOME: "home",
+  LOGOUT: "logout",
+  PROFILE: "profile",
+  LOGIN: "login",
+};
 
 const getSitemap = (isLogin) => {
   const baseSitemap = [
     {
-      id: "home",
-      href: "/",
+      id: ID.HOME,
+      href: ROUTE.HOME,
       label: "홈",
     },
     {
-      id: "profile",
-      href: "/profile",
+      id: ID.PROFILE,
+      href: ROUTE.PROFILE,
       label: "프로필",
     },
   ];
@@ -20,16 +28,16 @@ const getSitemap = (isLogin) => {
     ? [
         ...baseSitemap,
         {
-          id: "logout",
-          href: "/logout",
+          id: ID.LOGOUT,
+          href: ROUTE.LOGOUT,
           label: "로그아웃",
         },
       ]
     : [
         ...baseSitemap,
         {
-          id: "login",
-          href: "/login",
+          id: ID.LOGIN,
+          href: ROUTE.LOGIN,
           label: "로그인",
         },
       ];
@@ -56,11 +64,11 @@ class NavComponent extends HTMLElement {
 
   handleLogout() {
     authStoreActions.logout();
-    navigateTo("/login", { hash: window.isHash });
+    navigateTo(ROUTE.LOGIN, { hash: window.isHash });
   }
 
   handleClick(event) {
-    const logoutButton = this.querySelector("#logout");
+    const logoutButton = this.querySelector(`#${ID.LOGOUT}`);
 
     Array.from([...this.querySelectorAll("a")]).forEach((el) => {
       event.preventDefault();
@@ -86,9 +94,8 @@ class NavComponent extends HTMLElement {
     const { isLogin } = authStore.getState();
 
     const checkCurrentPath = (path) => {
-      const prefix = "#";
       return window.isHash
-        ? window.location.hash === prefix + path
+        ? window.location.hash === HASH_ROUTE.PREFIX + path
         : window.location.pathname === path;
     };
 

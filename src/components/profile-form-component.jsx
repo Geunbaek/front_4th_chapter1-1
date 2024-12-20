@@ -1,6 +1,12 @@
 import { authStore, authStoreActions } from "@/stores/auth-store";
-import { navigateTo } from "@/utils/router";
 import { renderChild } from "../utils/element";
+
+const ID = {
+  PROFILE_FORM: "profile-form",
+  USERNAME: "username",
+  EMAIL: "email",
+  BIO: "bio",
+};
 
 class ProfileFormComponent extends HTMLElement {
   constructor() {
@@ -13,9 +19,9 @@ class ProfileFormComponent extends HTMLElement {
   }
 
   handleUpdateProfile() {
-    const username = this.querySelector("#username").value;
-    const email = this.querySelector("#email").value;
-    const bio = this.querySelector("#bio").value;
+    const username = this.querySelector(`#${ID.USERNAME}`).value;
+    const email = this.querySelector(`#${ID.EMAIL}`).value;
+    const bio = this.querySelector(`#${ID.BIO}`).value;
 
     const user = {
       username,
@@ -24,12 +30,11 @@ class ProfileFormComponent extends HTMLElement {
     };
 
     authStoreActions.updateUser(user);
-    navigateTo("/profile");
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    const profileForm = this.querySelector("#profile-form");
+    const profileForm = this.querySelector(`#${ID.PROFILE_FORM}`);
 
     if (event.target === profileForm) {
       this.handleUpdateProfile();
@@ -44,7 +49,7 @@ class ProfileFormComponent extends HTMLElement {
     const { user } = authStore.getState();
     const { username, email, bio } = user;
     return (
-      <form id="profile-form">
+      <form id={ID.PROFILE_FORM}>
         <div class="mb-4">
           <label
             for="username"
@@ -54,7 +59,7 @@ class ProfileFormComponent extends HTMLElement {
           </label>
           <input
             type="text"
-            id="username"
+            id={ID.USERNAME}
             name="username"
             value={username}
             class="w-full p-2 border rounded"
@@ -66,7 +71,7 @@ class ProfileFormComponent extends HTMLElement {
           </label>
           <input
             type="email"
-            id="email"
+            id={ID.EMAIL}
             name="email"
             value={email}
             class="w-full p-2 border rounded"
@@ -77,7 +82,7 @@ class ProfileFormComponent extends HTMLElement {
             자기소개
           </label>
           <textarea
-            id="bio"
+            id={ID.BIO}
             name="bio"
             rows="4"
             class="w-full p-2 border rounded"

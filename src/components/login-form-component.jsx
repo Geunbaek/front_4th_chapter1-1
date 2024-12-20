@@ -1,6 +1,12 @@
 import { authStoreActions } from "@/stores/auth-store";
 import { navigateTo } from "@/utils/router";
 import { renderChild } from "../utils/element";
+import { ROUTE } from "../constant";
+
+const ID = {
+  USERNAME: "username",
+  LOGIN_FORM: "login-form",
+};
 
 class LoginFormComponent extends HTMLElement {
   constructor() {
@@ -13,13 +19,13 @@ class LoginFormComponent extends HTMLElement {
   }
 
   handleLogin() {
-    const username = this.querySelector("#username").value;
+    const username = this.querySelector(`#${ID.USERNAME}`).value;
 
     if (!username) {
       return;
     }
 
-    navigateTo("/", { hash: window.isHash });
+    navigateTo(ROUTE.HOME, { hash: window.isHash });
 
     const user = {
       username,
@@ -32,7 +38,7 @@ class LoginFormComponent extends HTMLElement {
 
   handleSubmit(event) {
     event.preventDefault();
-    const loginForm = this.querySelector("#login-form");
+    const loginForm = this.querySelector(`#${ID.LOGIN_FORM}`);
 
     if (event.target === loginForm) {
       this.handleLogin();
@@ -45,11 +51,11 @@ class LoginFormComponent extends HTMLElement {
 
   get element() {
     return (
-      <form id="login-form">
+      <form id={ID.LOGIN_FORM}>
         <div class="mb-4">
           <input
             type="text"
-            id="username"
+            id={ID.USERNAME}
             name="username"
             placeholder="사용자 이름"
             class="w-full p-2 border rounded"

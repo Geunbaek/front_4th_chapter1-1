@@ -1,3 +1,11 @@
+import { HASH_ROUTE, ROUTE } from "../constant";
+
+const EVENT = {
+  HASH_CHANGE: "hashchange",
+  ROUTE_CHANGE: "routeChange",
+  POP_STATE: "popstate",
+};
+
 const isCompletedMiddleware = (middlewares) => {
   if (!middlewares) return true;
   const isCompleted = middlewares.every((middleware) => middleware());
@@ -7,10 +15,10 @@ const isCompletedMiddleware = (middlewares) => {
 const navigateTo = (path, options) => {
   if (options?.hash) {
     window.location.hash = path;
-    dispatchEvent(new Event("hashchange"));
+    dispatchEvent(new Event(EVENT.HASH_CHANGE));
   } else {
     history.pushState(null, {}, path);
-    dispatchEvent(new CustomEvent("routeChange"));
+    dispatchEvent(new CustomEvent(EVENT.ROUTE_CHANGE));
   }
 };
 
@@ -19,7 +27,7 @@ const createRouter = (root) => {
   const middlewareMap = new Map();
   let currentPath = window.location.pathname;
 
-  const addRoute = (route, element, middlewares) => {
+  const addRoute = (route, element, middlewares = []) => {
     routeMap.set(route, element);
     middlewareMap.set(route, middlewares);
     return router;
@@ -35,7 +43,9 @@ const createRouter = (root) => {
     }
 
     const element =
-      routeMap.get(path) || routeMap.get("*") || document.createElement("div");
+      routeMap.get(path) ||
+      routeMap.get(ROUTE.WILDCARD) ||
+      document.createElement("div");
 
     return element();
   };
@@ -51,8 +61,8 @@ const createRouter = (root) => {
   };
 
   const init = () => {
-    window.addEventListener("popstate", handlePopState);
-    window.addEventListener("routeChange", handleRouteChange);
+    window.addEventListener(EVENT.POP_STATE, handlePopState);
+    window.addEventListener(EVENT.ROUTE_CHANGE, handleRouteChange);
     return router;
   };
 
@@ -70,8 +80,8 @@ const createHashRouter = (root) => {
   const middlewareMap = new Map();
   let currentPath = window.location.hash;
 
-  const addRoute = (route, element, middlewares) => {
-    const hashRoute = `#${route}`;
+  const addRoute = (route, element, middlewares = []) => {
+    const hashRoute = `${HASH_ROUTE.PREFIX}${route}`;
     routeMap.set(hashRoute, element);
     middlewareMap.set(hashRoute, middlewares);
     return router;
@@ -87,7 +97,9 @@ const createHashRouter = (root) => {
     }
 
     const element =
-      routeMap.get(path) || routeMap.get("#*") || document.createElement("div");
+      routeMap.get(path) ||
+      routeMap.get(`${HASH_ROUTE.PREFIX}${ROUTE.WILDCARD}`) ||
+      document.createElement("div");
 
     return element();
   };
@@ -99,9 +111,9 @@ const createHashRouter = (root) => {
 
   const init = () => {
     if (currentPath === "") {
-      navigateTo("/", { hash: true });
+      navigateTo(ROUTE.HOME, { hash: true });
     }
-    window.addEventListener("hashchange", handleRouteChange);
+    window.addEventListener(EVENT.HASH_CHANGE, handleRouteChange);
     return router;
   };
 

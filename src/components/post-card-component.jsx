@@ -1,5 +1,11 @@
 import { renderChild } from "../utils/element";
 
+const ATTRIBUTE = {
+  NAME: "name",
+  CREATED_AT: "createdAt",
+  CONTENT: "content",
+};
+
 class PostCardComponent extends HTMLElement {
   constructor() {
     super();
@@ -10,9 +16,9 @@ class PostCardComponent extends HTMLElement {
   }
 
   get element() {
-    const name = this.getAttribute("name");
-    const createdAt = this.getAttribute("createdAt");
-    const content = this.getAttribute("content");
+    const name = this.getAttribute(ATTRIBUTE.NAME);
+    const createdAt = this.getAttribute(ATTRIBUTE.CREATED_AT);
+    const content = this.getAttribute(ATTRIBUTE.CONTENT);
 
     return (
       <div class="bg-white rounded-lg shadow p-4">
