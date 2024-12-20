@@ -9,6 +9,7 @@ class ProfileFormComponent extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.addEvent();
   }
 
   handleUpdateProfile() {
@@ -24,6 +25,19 @@ class ProfileFormComponent extends HTMLElement {
 
     authStoreActions.updateUser(user);
     navigateTo("/profile");
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const profileForm = this.querySelector("#profile-form");
+
+    if (event.target === profileForm) {
+      this.handleUpdateProfile();
+    }
+  }
+
+  addEvent() {
+    this.addEventListener("submit", this.handleSubmit.bind(this));
   }
 
   get element() {
@@ -81,24 +95,8 @@ class ProfileFormComponent extends HTMLElement {
     );
   }
 
-  addEvent() {
-    const profileForm = this.querySelector("#profile-form");
-
-    const handleSubmit = (event) => {
-      if (event.target === profileForm) {
-        event.preventDefault();
-
-        this.handleUpdateProfile();
-      }
-    };
-
-    this.removeEventListener("submit", handleSubmit);
-    this.addEventListener("submit", handleSubmit);
-  }
-
   render() {
     renderChild(this, this.element);
-    this.addEvent();
   }
 }
 

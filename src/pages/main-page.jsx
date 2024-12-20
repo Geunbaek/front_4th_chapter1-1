@@ -11,6 +11,10 @@ class MainPage extends HTMLElement {
     this.render();
   }
 
+  disconnectedCallback() {
+    postsStore.unsubscribe(this.render.bind(this));
+  }
+
   get element() {
     const posts = postsStore.getState();
     return (

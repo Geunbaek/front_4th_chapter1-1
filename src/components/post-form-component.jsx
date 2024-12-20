@@ -9,6 +9,7 @@ class PostFormComponent extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.addEvent();
   }
 
   handleAddForm() {
@@ -25,6 +26,18 @@ class PostFormComponent extends HTMLElement {
       createdAt: "1분 전",
       content: postContent.value,
     });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const postForm = this.querySelector("#post-form");
+    if (event.target === postForm) {
+      this.handleAddForm();
+    }
+  }
+
+  addEvent() {
+    this.addEventListener("submit", this.handleSubmit);
   }
 
   get element() {
@@ -45,23 +58,8 @@ class PostFormComponent extends HTMLElement {
     );
   }
 
-  addEvent() {
-    const postForm = this.querySelector("#post-form");
-
-    const handleSubmit = (event) => {
-      if (event.target === postForm) {
-        event.preventDefault();
-        this.handleAddForm();
-      }
-    };
-
-    this.removeEventListener("submit", handleSubmit);
-    this.addEventListener("submit", handleSubmit);
-  }
-
   render() {
     renderChild(this);
-    this.addEvent();
   }
 }
 

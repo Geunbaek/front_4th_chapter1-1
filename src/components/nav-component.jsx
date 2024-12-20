@@ -43,6 +43,7 @@ class NavComponent extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.addEvent();
   }
 
   disconnectedCallback() {
@@ -56,6 +57,29 @@ class NavComponent extends HTMLElement {
   handleLogout() {
     authStoreActions.logout();
     navigateTo("/login", { hash: window.isHash });
+  }
+
+  handleClick(event) {
+    const logoutButton = this.querySelector("#logout");
+
+    Array.from([...this.querySelectorAll("a")]).forEach((el) => {
+      event.preventDefault();
+      const url = new URL(el.href);
+
+      if (event.target === logoutButton) {
+        this.handleLogout();
+        return;
+      }
+
+      if (event.target === el) {
+        this.handleNavigate(url.pathname);
+        return;
+      }
+    });
+  }
+
+  addEvent() {
+    this.addEventListener("click", this.handleClick);
   }
 
   get element() {
@@ -91,30 +115,8 @@ class NavComponent extends HTMLElement {
     );
   }
 
-  addEvent() {
-    const logoutButton = this.querySelector("#logout");
-
-    this.addEventListener("click", (event) => {
-      Array.from([...this.querySelectorAll("a")]).forEach((el) => {
-        event.preventDefault();
-        const url = new URL(el.href);
-
-        if (event.target === logoutButton) {
-          this.handleLogout();
-          return;
-        }
-
-        if (event.target === el) {
-          this.handleNavigate(url.pathname);
-          return;
-        }
-      });
-    });
-  }
-
   render() {
     renderChild(this);
-    this.addEvent();
   }
 }
 
