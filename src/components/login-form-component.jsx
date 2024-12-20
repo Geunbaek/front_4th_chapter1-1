@@ -9,6 +9,7 @@ class LoginFormComponent extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.addEvent();
   }
 
   handleLogin() {
@@ -27,6 +28,19 @@ class LoginFormComponent extends HTMLElement {
     };
 
     authStoreActions.login(user);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    const loginForm = this.querySelector("#login-form");
+
+    if (event.target === loginForm) {
+      this.handleLogin();
+    }
+  }
+
+  addEvent() {
+    this.addEventListener("submit", this.handleSubmit);
   }
 
   get element() {
@@ -60,21 +74,8 @@ class LoginFormComponent extends HTMLElement {
     );
   }
 
-  addEvent() {
-    const loginForm = this.querySelector("#login-form");
-
-    this.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      if (event.target === loginForm) {
-        this.handleLogin();
-      }
-    });
-  }
-
   render() {
     renderChild(this);
-    this.addEvent();
   }
 }
 
